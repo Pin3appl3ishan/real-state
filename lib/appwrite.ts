@@ -1,6 +1,6 @@
 import { Account, Avatars, Client, OAuthProvider } from "react-native-appwrite";
 import * as Linking from "expo-linking";
-import { openAuthSessionAsync } from "expo-auth-session";
+import { openAuthSessionAsync } from "expo-web-browser";
 
 export const config = {
   platform: "com.jsm.restate",
@@ -62,3 +62,20 @@ export async function logout() {
     }
 }
 
+export async function getUser() {
+    try {
+        const response = await account.get();
+        
+        if (response.$id) {
+            const userAvatar = avatar.getInitials(response.name);
+
+            return {
+                ...response,
+                avatar: userAvatar.toString(),
+            }
+        }
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
