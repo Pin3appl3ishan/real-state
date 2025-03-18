@@ -5,7 +5,15 @@ import icons from "@/constants/icons";
 import images from "@/constants/images";
 
 const SignIn = () => {
-  const handleLogin = () => {};
+  const handleLogin = async () => {
+    const result = await login();
+    if (result) {
+      console.log("login success");
+    } else {
+      console.log("login failed");
+    }
+  };
+  
   return (
     <SafeAreaView className="bg-white h-full">
       <ScrollView contentContainerClassName="hf-full">
