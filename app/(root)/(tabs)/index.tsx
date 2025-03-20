@@ -12,10 +12,6 @@ export default function Index() {
       }}
     >
       <Text className="font-bold text-3xl font-rubik my-10">Welcome to RealState</Text>
-      <Link href="/sign-in">SignIn</Link>
-      <Link href="/explore">Explore</Link>
-      <Link href="/profile">Profile</Link>
-      <Link href="/properties/1">Property 1</Link>
     </View>
   );
 }
