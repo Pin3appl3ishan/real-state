@@ -10,11 +10,12 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import icons from "@/constants/icons";
 import images from "@/constants/images";
+import { settings } from "@/constants/data";
 
 interface SettingsItemProps {
   icon: ImageSourcePropType;
   title: string;
-  onPress: () => void;
+  onPress?: () => void;
   textStyle?: string;
   showArrow?: boolean;
 }
@@ -26,10 +27,15 @@ const SettingsItem = ({
   textStyle,
   showArrow = true,
 }: SettingsItemProps) => (
-  <TouchableOpacity>
-    <View>
-      <Image source={icon} />
-      <Text>{title}</Text>
+  <TouchableOpacity
+    onPress={onPress}
+    className="flex-row items-center justify-between py-3"
+  >
+    <View className="flex flex-row items-center gap-3">
+      <Image source={icon} className="size-6" />
+      <Text className={`text-lg font-rubik-medium text-black-300 ${textStyle}`}>
+        {title}
+      </Text>
     </View>
   </TouchableOpacity>
 );
@@ -64,7 +70,28 @@ const Profile = () => {
           </View>
         </View>
 
-        <View className="flex flex-col mt-10"></View>
+        <View className="flex flex-col mt-10">
+          <SettingsItem icon={icons.calendar} title="My Bookings" />
+          <SettingsItem icon={icons.wallet} title="Payments" />
+        </View>
+
+        <View className="flex flex-col mt-5 border-t pt-5 border-primary-200">
+          {settings.slice(2).map((item, index) => (
+            <SettingsItem
+              key={index}
+              {...item} />
+          ))}
+        </View>
+
+        <View className="flex flex-col mt-5 border-t pt-5 border-primary-200">
+          <SettingsItem
+            icon={icons.logout}
+            title="Logout"
+            textStyle="text-danger"
+            showArrow={false}
+            onPress={handleLogout}
+          />  
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
