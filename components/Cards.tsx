@@ -63,22 +63,21 @@ export const Card = ({ onPress }: Props) => {
 
       <Image source={images.newYork} className="w-full h-40 rounded-lg" />
 
-      <View className="flex flex-col items-start absolute bottom-5 inset-x-5">
-        <Text
-          className="text-xl font-rubik-extrabold text-white"
-          numberOfLines={1}
-        >
-          Modern Apartment
-        </Text>
-        <Text className="text-base font-rubik text-white">
+      <View className="flex flex-col mt-2">
+        <Text className="text-base font-rubik-bold text-black-300">Studio</Text>
+        <Text className="text-xs font-rubik text-black-200">
           22 W 17th, Kathmandu
         </Text>
 
-        <View className="flex flex-row items-center justify-between w-full">
-          <Text className="text-xl font-rubik-extrabold text-white">
+        <View className="flex flex-row items-center justify-between mt-2">
+          <Text className="text-base font-rubik-bold text-primary-300">
             $2,400
           </Text>
-          <Image source={icons.heart} className="size-5" />
+          <Image
+            source={icons.heart}
+            className="w-5 h-5 mr-2"
+            tintColor="#191d31 "
+          />
         </View>
       </View>
     </TouchableOpacity>
