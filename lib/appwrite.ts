@@ -1,4 +1,4 @@
-import { Account, Avatars, Client, OAuthProvider } from "react-native-appwrite";
+import { Account, Avatars, Client, Databases, OAuthProvider } from "react-native-appwrite";
 import * as Linking from "expo-linking";
 import { openAuthSessionAsync } from "expo-web-browser";
 
@@ -6,6 +6,11 @@ export const config = {
   platform: "com.jsm.restate",
   endpoint: process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT,
   projectID: process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID,
+  databaseID: process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID,
+  galleriesCollectionID:process.env.EXPO_PUBLIC_APPWRITE_GALLERIES_COLLECTION_ID,
+  reviewsCollectionID: process.env.EXPO_PUBLIC_APPWRITE_REVIEWS_COLLECTION_ID,
+  agentsCollectionID: process.env.EXPO_PUBLIC_APPWRITE_AGENTS_COLLECTION_ID,
+  propertiesCollectionID:process.env.EXPO_PUBLIC_APPWRITE_PROPERTIES_COLLECTION_ID,
 };
 
 export const client = new Client();
@@ -16,6 +21,7 @@ client
 
 export const avatar = new Avatars(client);
 export const account = new Account(client);
+export const databases = new Databases(client);
 
 export async function login() {
   try {
@@ -35,7 +41,7 @@ export async function login() {
     if (browserResult.type !== "success") throw new Error("Failed to login");
 
     const url = new URL(browserResult.url);
-    
+
     const secret = url.searchParams.get("secret")?.toString();
     const userId = url.searchParams.get("userId")?.toString();
 
@@ -53,29 +59,29 @@ export async function login() {
 }
 
 export async function logout() {
-    try {
-        await account.deleteSession("current");
-        return true;
-    } catch (error) {
-        console.error(error);
-        return false;
-    }
+  try {
+    await account.deleteSession("current");
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
 }
 
 export async function getCurrentUser() {
-    try {
-        const response = await account.get();
-        
-        if (response.$id) {
-            const userAvatar = avatar.getInitials(response.name);
+  try {
+    const response = await account.get();
 
-            return {
-                ...response,
-                avatar: userAvatar.toString(),
-            }
-        }
-    } catch (error) {
-        console.error(error);
-        return null;
+    if (response.$id) {
+      const userAvatar = avatar.getInitials(response.name);
+
+      return {
+        ...response,
+        avatar: userAvatar.toString(),
+      };
     }
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }
