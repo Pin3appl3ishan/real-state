@@ -5,7 +5,7 @@ import { getLatestProperties, getProperties } from "@/lib/appwrite";
 import { useGlobalContext } from "@/lib/global-provider";
 import seed from "@/lib/seed";
 import { useAppwrite } from "@/lib/useAppwrite";
-import { Link, useLocalSearchParams } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import { useEffect } from "react";
 import {
   Button,
@@ -34,6 +34,8 @@ export default function Index() {
     skip: true
   });
 
+  const handleCardPress = (id: string) => router.push(`/properties/${id}`);
+
   useEffect(() => {
     refetch({
       filter: params.filter!,
@@ -47,7 +49,7 @@ export default function Index() {
       <Button title="Seed" onPress={seed} />
       <FlatList
         data={properties}
-        renderItem={({ item }) => <Card />}
+        renderItem={({ item }) => <Card item={item} onPress={() => handleCardPress(item.$id)}/>}
         keyExtractor={(item) => item.toString()}
         numColumns={2}
         contentContainerClassName="pb-32"
@@ -86,7 +88,7 @@ export default function Index() {
 
               <FlatList
                 data={latestProperties}
-                renderItem={({ item }) => <FeaturedCard />}
+                renderItem={({ item }) => <FeaturedCard item={item} onPress={() => handleCardPress(item.$id)}/>}
                 keyExtractor={(item) => item.toString()}
                 horizontal
                 bounces={false}
