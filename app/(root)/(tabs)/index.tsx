@@ -1,25 +1,52 @@
 import { Card, FeaturedCard } from "@/components/Cards";
 import Search from "@/components/Search";
 import images from "@/constants/images";
-import { getLatestProperties } from "@/lib/appwrite";
+import { getLatestProperties, getProperties } from "@/lib/appwrite";
 import { useGlobalContext } from "@/lib/global-provider";
 import seed from "@/lib/seed";
 import { useAppwrite } from "@/lib/useAppwrite";
 import { Link, useLocalSearchParams } from "expo-router";
-import { Button, FlatList, Image, Text, TouchableOpacity, View } from "react-native";
+import { useEffect } from "react";
+import {
+  Button,
+  FlatList,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
-  const {user} = useGlobalContext();
-  const params = useLocalSearchParams<{query? : string; filter?:string;}>();
+  const { user } = useGlobalContext();
+  const params = useLocalSearchParams<{ query?: string; filter?: string }>();
 
-  const {data: latestProperties, loading: latestPropertiesLoading} = useAppwrite({fn: getLatestProperties})
-  
+  const { data: latestProperties, loading: latestPropertiesLoading } =
+    useAppwrite({ fn: getLatestProperties });
+
+  const { data: properties, loading, refetch } = useAppwrite({
+    fn: getProperties,
+    params: {
+      filter: params.filter!,
+      query: params.query!,
+      limit: 6,
+    },
+    skip: true
+  });
+
+  useEffect(() => {
+    refetch({
+      filter: params.filter!,
+      query: params.query!, 
+      limit: 6,
+    });
+  }, [params.filter, params.query]);
+
   return (
     <SafeAreaView className="bg-white h-full">
       <Button title="Seed" onPress={seed} />
       <FlatList
-        data={[1, 2]}
+        data={properties}
         renderItem={({ item }) => <Card />}
         keyExtractor={(item) => item.toString()}
         numColumns={2}
@@ -31,7 +58,7 @@ export default function Index() {
             <View className="flex flex-row items-center justify-between mt-5">
               <View className="flex flex-row items-center">
                 <Image
-                  source={{uri: user?.avatar}}
+                  source={{ uri: user?.avatar }}
                   className="size-12 rounded-full"
                 />
                 <View className="flex flex-col items-start ml-2 justify-center">
@@ -58,13 +85,14 @@ export default function Index() {
               </View>
 
               <FlatList
-                data={[1, 2, 3]}
+                data={latestProperties}
                 renderItem={({ item }) => <FeaturedCard />}
                 keyExtractor={(item) => item.toString()}
                 horizontal
                 bounces={false}
                 showsHorizontalScrollIndicator={false}
-                contentContainerClassName="flex gap-5 mt-5"/>
+                contentContainerClassName="flex gap-5 mt-5"
+              />
             </View>
 
             <View className="flex flex-row items-center justify-between">
